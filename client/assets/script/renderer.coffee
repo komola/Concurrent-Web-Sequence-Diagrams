@@ -7,6 +7,26 @@ class Renderer
     width = 0;
     height = 0;
 
+    boxwidth = 150;
+    boxheight = 50;
+    spacing = 10;
+
+    drawBox = (text, x, y) ->
+        ctx.strokeRect(
+            boxwidth*x + spacing / 2,
+            boxheight*y + spacing / 2,
+            boxwidth - spacing ,
+            boxheight - spacing ,
+        )
+
+        textWidth = ctx.measureText(text).width;
+        textHeight = 8;
+
+        ctx.fillText(text, 
+            boxwidth*x + boxwidth/ 2 - textWidth / 2, 
+            boxheight*(y + 0.5) + textHeight / 2,
+            width - 2*spacing )
+
     draw: (data) ->
         # clear context
         ctx.clearRect(0,0, width, height)
@@ -28,13 +48,18 @@ class Renderer
             0: Object
         ###
         
-        width = 300;
-        padding = 10;
+        # draws the header
+        for structure, index in data.structures
+            drawBox(structure, index, 0);
 
-        for structure in data.structures
-            ctx.strokeText(structure, padding, padding, width - 2*padding )
+        # draws the boxes
+        for y of data.tasks
+            row = data.tasks[y]
+            for x of row
+                cell = row[x];
+                drawBox(cell, parseInt(x),parseInt(y)+1)
 
-        ctx.stroke
+        #ctx.stroke
 
 
         # draw        
