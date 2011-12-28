@@ -13,6 +13,8 @@ class Application
             doc.attach_textarea(document.getElementById(textarea))
             doc.on "change", @changeCallback
             true
+        #call for first draw;
+        @changeCallback();
 
         return true
 

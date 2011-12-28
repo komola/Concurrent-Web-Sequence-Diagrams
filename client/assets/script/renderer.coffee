@@ -4,13 +4,16 @@ COLUMN_WIDTH = 150;
 boxwidth = 150;
 boxheight = 50;
 spacing = 10;
+
+arrowNudge = 20;
+
 drawBox = (text, x, y, ctx) ->
     if text == ""
         return;
 
     ctx.strokeRect(
         x + spacing / 2,
-        boxheight*y + spacing / 2,
+        y + spacing / 2,
         boxwidth - spacing ,
         boxheight - spacing ,
     )
@@ -27,13 +30,98 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     headlen = 10; #length of head in pixels
     angle = Math.atan2(toy-fromy,tox-fromx);
     
-    context.moveTo(fromx, fromy);
-    context.lineTo(tox, toy);
-    context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy-headlen*Math.sin(angle-Math.PI/6));
-    context.moveTo(tox, toy);
-    context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
+    if angle < Math.PI / 2
+        angle += Math.PI / 180 * 45;
+        # main line
+        context.moveTo(fromx, fromy);
+        #context.lineTo(tox, toy);
+        context.bezierCurveTo(
+            tox - arrowNudge, toy,
+            tox - arrowNudge, toy,
+            tox, toy + arrowNudge
+        )
 
-drawLabel = (x, y, rightBound) ->
+        # arrow head
+        context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy+ arrowNudge-headlen*Math.sin(angle-Math.PI/6));
+        context.moveTo(tox, toy+ arrowNudge);
+        context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy+ arrowNudge-headlen*Math.sin(angle+Math.PI/6));
+    else 
+        angle -= Math.PI / 180 * 45;
+        # main line
+        context.moveTo(fromx, fromy);
+        #context.lineTo(tox, toy);
+        context.bezierCurveTo(
+            tox + arrowNudge, toy,
+            tox + arrowNudge, toy,
+            tox, toy + arrowNudge
+        )
+
+        # arrow head
+        context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy+ arrowNudge-headlen*Math.sin(angle-Math.PI/6));
+        context.moveTo(tox, toy+ arrowNudge);
+        context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy+ arrowNudge-headlen*Math.sin(angle+Math.PI/6));
+    
+
+roundRect = (ctx, x, y, width, height, radius, fill, stroke) ->
+  if (typeof stroke == "undefined" ) {
+    stroke = true;
+  }
+  if (typeof radius === "undefined") {
+    radius = 5;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  if (stroke) {
+    ctx.stroke();
+  }
+  if (fill) {
+    ctx.fill();
+  }        
+
+
+drawLabel = (text, x, y, rightBound, context) ->
+    if text == ""
+        debugger;
+        return;
+
+    textWidth = ctx.measureText(text).width;
+    textHeight = 8;
+
+    width = textWidth + spacing;
+    height = textHeight + spacing / 2;
+
+    if(rightBound) 
+        ctx.strokeRect(
+            x - width + spacing / 2,
+            y - height / 2 + spacing / 2,
+            width - spacing ,
+            height - spacing ,
+        )
+        ctx.fillText(text, 
+            x - width + width/ 2 - textWidth / 2, 
+            y + height / 2 + textHeight / 2,
+            width - 2*spacing )
+    else
+        ctx.strokeRect(
+            x + spacing / 2,
+            y + spacing / 2,
+            boxwidth - spacing ,
+            boxheight - spacing ,
+        )
+    
+        ctx.fillText(text, 
+            x + width/ 2 - textWidth / 2, 
+            y + height / 2 + textHeight / 2,
+            width - 2*spacing )
 
 
 class AbstractRenderer 
@@ -71,6 +159,8 @@ class ActionRenderer extends AbstractRenderer
             renderState.verticalPosition,
             context);
         context.stroke();
+
+        drawLabel(row.tokens[4], fromActor.x, renderState.verticalPosition, false);
 
         renderState.verticalPosition += 50;
 
@@ -145,7 +235,7 @@ class RendererManager
                     drawing = false;
                 else 
                     if lastElement == null
-                        @context.moveTo(actor.x, element)
+                        @context.moveTo(actor.x, element + arrowNudge)
                     lastElement = element;
                     
         @context.stroke();
