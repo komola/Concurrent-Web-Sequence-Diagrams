@@ -73,10 +73,20 @@ sharejs.open('blag', 'text', function(error, doc) {
   var elem = document.getElementById('pad');
   doc.attach_textarea(elem);
 
+	var timer;
+	var Renderer = new Renderer("script");
+
 	doc.on("change", function() {
-		var elm = $("#pad").val();
-		console.log(elm);
-		})
+		// Clear previous calls to parsing the user input
+		window.clearTimeout(timer);
+		timer = window.setTimeout(function() {
+			alert("test");
+			var elm = $("#pad");
+			var parsedData = parseUserInput(elm.val());
+			console.log(parsedData);
+			Renderer.draw(parsedData);
+		}, 500);
+	});
 });
 
 
