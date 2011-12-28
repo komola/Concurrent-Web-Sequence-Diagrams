@@ -1,11 +1,12 @@
 elementInformation = []
-dependencyList = []
+
 
 parseUserInput = (string) ->
-    lines = string.split("\n")
-
+    dependencyList = []
     structureMap = {}
     taskMap = {}
+
+    lines = string.split("\n")
 
     #// 1 => To the right,
     #// -1 => To the left
