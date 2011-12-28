@@ -53,17 +53,18 @@ class Tokenizer
       else
         buffer += a
 
+        commandMode = false
         for operator in @operators
-          commandMode = false
           if buffer.indexOf(operator) > -1
             beginningText = buffer.substring(0, buffer.length - operator.length).trim()
             if beginningText.length > 0
               tokens.push beginningText
 
+            # Check if the last token is an operator
             if tokens[tokens.length - 1] == "->" or tokens[tokens.length - 1] == ":"
               commandMode = true
 
-            if operator == "\n" and commandMode
+            if commandMode
               buffer = ""
               continue
 

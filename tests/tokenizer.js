@@ -48,3 +48,10 @@ exports.testProcessStringOverSeveralLines = function(test) {
         " Hund:Bla"), ["Mensch", ":", "Bla", "->", "Hund", ":", "Bla"]);
   test.done();
 }
+
+exports.testTokenizerIsRobust = function(test) {
+  test.deepEqual(Tokenizer.tokenize("Mensch -> Hund : asd\nHund"), ["Mensch", "->", "Hund", ":", "asd", "\n", "Hund"]);
+  test.deepEqual(Tokenizer.tokenize("Mensch -> : Hund : asd\nHund"), ["Mensch", "->", "Hund", ":", "asd", "\n", "Hund"]);
+  test.deepEqual(Tokenizer.tokenize("Mensch -> \n Hund : asd\nHund"), ["Mensch", "->", "Hund", ":", "asd", "\n", "Hund"]);
+  test.done();
+}
