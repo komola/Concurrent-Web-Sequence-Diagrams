@@ -9,7 +9,7 @@ drawBox = (text, x, y, ctx) ->
         return;
 
     ctx.strokeRect(
-        boxwidth*x + spacing / 2,
+        x + spacing / 2,
         boxheight*y + spacing / 2,
         boxwidth - spacing ,
         boxheight - spacing ,
@@ -19,9 +19,9 @@ drawBox = (text, x, y, ctx) ->
     textHeight = 8;
 
     ctx.fillText(text, 
-        boxwidth*x + boxwidth/ 2 - textWidth / 2, 
+        x + boxwidth/ 2 - textWidth / 2, 
         boxheight*(y + 0.5) + textHeight / 2,
-        width - 2*spacing )
+        boxwidth - 2*spacing )
 
 drawArrow = (fromx, fromy, tox, toy, context) ->
     headlen = 10; #length of head in pixels
@@ -33,6 +33,7 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     context.moveTo(tox, toy);
     context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
 
+drawLabel = (x, y, rightBound) ->
 
 
 class AbstractRenderer 
@@ -112,7 +113,12 @@ class RendererManager
         @renderers.push(renderer);
 
     renderData: (data) ->
+        #clear rect
+        @context.clearRect(0,0, @canvas.width, @canvas.height);
+
         renderState = new RenderState();
+
+        renderState.verticalPosition = boxheight + 2 * spacing ; # leave space for header
 
         # call the individual renderers
         for row in data.actions
@@ -121,20 +127,24 @@ class RendererManager
                     renderer.render(row, renderState, @context)
             renderState.rowIndex += 1;
 
-        # draw the vertical lines 
+        # draw the header boxes
         for actor in renderState.actorArray 
+            # Draw the labels
+            drawBox(actor.name, actor.x, 0, @context);
+
+        # draw the vertical lines 
+        @context.beginPath();
+        for actor in renderState.actorArray 
+            # Draw the vertical Line Paths
             drawing = false;
             lastElement = null;
-            console.log('actor: ', actor.name, ' active Path', actor.activePath);
             for element in actor.activePath
                 if element == null
                     @context.lineTo(actor.x, lastElement);
-                    console.log('  to: ', actor.x, lastElement);
                     lastElement = null;
                     drawing = false;
                 else 
                     if lastElement == null
-                        console.log('from: ', actor.x, element);
                         @context.moveTo(actor.x, element)
                     lastElement = element;
                     
