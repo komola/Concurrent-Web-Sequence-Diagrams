@@ -1,16 +1,31 @@
+$ = jQuery
 
 class Application
-	renderer = null;
+  renderer = null
+  elm = null
+
+  constructor: (textarea, canvas) ->
+    @renderer = new Renderer(canvas)
+    @elm = $("#"+textarea)
+
+    console.log @elm
+
+    sharejs.open "websequence", "text", (error, doc) =>
+      doc.attach_textarea(document.getElementById(textarea))
+      doc.on "change", @changeCallback
+      true
+
+    return true
 	
-	redraw: () ->
-		data = parseUserInput;
-        renderer.draw(data);
+  redraw: =>
+    data = parseUserInput(@elm.val())
+    console.log data
+    @renderer.draw(data);
 
-	constructor: () ->
-		renderer = new Renderer('canvas')
+  changeCallback: =>
+    console.log "test"
+    window.clearTimeout(@timer)
+    @timer = window.setTimeout @redraw, 500
 
-
-$(document).ready(() ->
-    app = new Application() ;
-    app.redraw();
-)
+$ ->
+  new Application "pad", "canvas"

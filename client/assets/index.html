@@ -59,40 +59,9 @@
 <script src="/share/json.js"></script>
 <script src="/share/textarea.js"></script>
 
-<script src="script/diagram.js"></script>
+<script src="script/parser.js"></script>
 <script src="script/renderer.js"></script>
 <script src="script/application.js"></script>
-
-
-
-<script>
-$(function() {
-  // *** Editor window
-
-sharejs.open('blag', 'text', function(error, doc) {
-  var elem = document.getElementById('pad');
-  doc.attach_textarea(elem);
-
-	var timer;
-	var Renderer = new Renderer("script");
-
-	doc.on("change", function() {
-		// Clear previous calls to parsing the user input
-		window.clearTimeout(timer);
-		timer = window.setTimeout(function() {
-			alert("test");
-			var elm = $("#pad");
-			var parsedData = parseUserInput(elm.val());
-			console.log(parsedData);
-			Renderer.draw(parsedData);
-		}, 500);
-	});
-});
-
-
-});
-
-</script>
 	</body>
 </html>
 
