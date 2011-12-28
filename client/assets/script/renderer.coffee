@@ -23,6 +23,16 @@ drawBox = (text, x, y, ctx) ->
         boxheight*(y + 0.5) + textHeight / 2,
         width - 2*spacing )
 
+drawArrow = (fromx, fromy, tox, toy, context) ->
+    headlen = 10; #length of head in pixels
+    angle = Math.atan2(toy-fromy,tox-fromx);
+    
+    context.moveTo(fromx, fromy);
+    context.lineTo(tox, toy);
+    context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy-headlen*Math.sin(angle-Math.PI/6));
+    context.moveTo(tox, toy);
+    context.lineTo(tox-headlen*Math.cos(angle+Math.PI/6),toy-headlen*Math.sin(angle+Math.PI/6));
+
 
 
 class AbstractRenderer 
@@ -33,21 +43,32 @@ class AbstractRenderer
         console.log("Todo: Implement");
         
 class ActionRenderer extends AbstractRenderer
+    lastFromActor = null;
+
     acceptsRow: (row) ->
         if (row.tokens.length == 3 and row.tokens[1] == "->") or (row.tokens.length == 5 and row.tokens[1] == "->" and row.tokens[3] == ":")
             return true;
         return false;
     render: (row, renderState, context) -> 
         fromActor = renderState.getActor(row.tokens[0]);
+
+        if(fromActor == lastFromActor)
+            fromActor.activePath.pop()
+        else
+            lastFromActor = fromActor
+
+        fromActor.activePath.push(renderState.verticalPosition);
+        fromActor.activePath.push(null);
+
         toActor = renderState.getActor(row.tokens[2]);
+        toActor.activePath.push(renderState.verticalPosition);
 
         context.beginPath();
-        context.moveTo(
-            fromActor.x,
-            renderState.verticalPosition);
-        context.lineTo(
+        drawArrow(fromActor.x,
+            renderState.verticalPosition,
             toActor.x,
-            renderState.verticalPosition);
+            renderState.verticalPosition,
+            context);
         context.stroke();
 
         renderState.verticalPosition += 50;
@@ -59,13 +80,13 @@ class RenderState
         @actorArray = []
         @verticalPosition = spacing
         @rowIndex = 0
-
     getActor: (name) ->
         if(@actors[name]?) 
             return @actors[name]
         else
             newActor = {
                 name: name,
+                activePath: [],
                 width: COLUMN_WIDTH,
                 x: @actorArray.length * COLUMN_WIDTH
             };
@@ -93,67 +114,33 @@ class RendererManager
     renderData: (data) ->
         renderState = new RenderState();
 
+        # call the individual renderers
         for row in data.actions
             for renderer in @renderers
                 if renderer.acceptsRow(row)
                     renderer.render(row, renderState, @context)
             renderState.rowIndex += 1;
 
+        # draw the vertical lines 
+        for actor in renderState.actorArray 
+            drawing = false;
+            lastElement = null;
+            console.log('actor: ', actor.name, ' active Path', actor.activePath);
+            for element in actor.activePath
+                if element == null
+                    @context.lineTo(actor.x, lastElement);
+                    console.log('  to: ', actor.x, lastElement);
+                    lastElement = null;
+                    drawing = false;
+                else 
+                    if lastElement == null
+                        console.log('from: ', actor.x, element);
+                        @context.moveTo(actor.x, element)
+                    lastElement = element;
+                    
+        @context.stroke();
+
 window.RendererManager = RendererManager;
 
-class Renderer
-    canvas = null;
-    ctx = null;
-    width = 0;
-    height = 0;
-
-
-
-    draw: (data) ->
-        # clear context
-        ctx.clearRect(0,0, width, height)
-        # todo 
-        ctx.lineTo(width, height);
-        ctx.stroke();
-        
-        ### bject
-        dependencies: Array[2]
-            0: Object
-                col: 0
-                row: 0
-            __proto__: Object
-            1: Object
-        structures: Array[2]
-            0: "User"
-            1: " Thomas"
-        tasks: Object
-            0: Object
-        ###
-        
-        # draws the header
-        for structure, index in data.structures
-            drawBox(structure, index, 0);
-
-        # draws the boxes
-        for y of data.tasks
-            row = data.tasks[y]
-            for x of row
-                cell = row[x];
-                drawBox(cell, parseInt(x),parseInt(y)+1)
-
-        #ctx.stroke
-
-
-        # draw        
-
-    constructor: (elementId) ->
-        canvas = document.getElementById(elementId);
-        if canvas.getContext
-            width = canvas.width;
-            height = canvas.height;
-            ctx = canvas.getContext('2d');
-        else 
-            console.log('no canvas, aborting.');
-            return;
 
 

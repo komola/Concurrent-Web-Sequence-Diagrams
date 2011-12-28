@@ -26,6 +26,9 @@ class Application
                     tokens: ["Mensch", "->", "Hund", ":", "Hat"]
                 },
                 {    
+                    tokens: ["Hund", "->","Katze", ":", "Jagd"]
+                },
+                {    
                     tokens: ["Hund", "->","Katze", ":", "Beisst"]
                 },
                 {    
@@ -36,6 +39,9 @@ class Application
                 },
                 {    
                     tokens: ["Fliege", "->", "Mensch", ":", "Nerft"]
+                },
+                {    
+                    tokens: ["Mensch", "->", "Katze", ":", "Hat"]
                 }]
             };
 
