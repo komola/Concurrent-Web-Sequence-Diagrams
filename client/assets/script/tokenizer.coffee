@@ -75,3 +75,4 @@ class Tokenizer
     tokens
 
 module?.exports = new Tokenizer
+window.Tokenizer = new Tokenizer
