@@ -9,6 +9,7 @@ class Application
 
         console.log @textArea
 
+
         sharejs.open "websequence", "text", (error, doc) =>
             doc.attach_textarea(document.getElementById(textarea))
             doc.on "change", @changeCallback
@@ -21,31 +22,35 @@ class Application
     redraw: =>
         data = @textArea.val();
         #data = "Thomas: Says Hello \n Dennis: Hits him"
-        parseddata = parseUserInput(data);
-        parseddata = {
-            actors: ["Mensch", "Hund", "Katze", "Maus", "Fliege"],
-            actions: [{    
-                    tokens: ["Mensch", "->", "Hund", ":", "Hat"]
-                },
-                {    
-                    tokens: ["Hund", "->","Katze", ":", "Jagd"]
-                },
-                {    
-                    tokens: ["Hund", "->","Katze", ":", "Beisst"]
-                },
-                {    
-                    tokens: ["Katze", "->", "Maus", ":", "Beisst"]
-                },
-                {    
-                    tokens: ["Maus", "->", "Fliege", ":", "Isst"]
-                },
-                {    
-                    tokens: ["Fliege", "->", "Mensch", ":", "Nerft"]
-                },
-                {    
-                    tokens: ["Mensch", "->", "Katze", ":", "Hat"]
-                }]
-            };
+        #parseddata = parseUserInput(data);
+
+        tokens = Tokenizer.tokenize(data)
+        parseddata = Parser.parse(tokens)
+
+        #parseddata = {
+            #actors: ["Mensch", "Hund", "Katze", "Maus", "Fliege"],
+            #actions: [{    
+                    #tokens: ["Mensch", "->", "Hund", ":", "Hat"]
+                #},
+                #{    
+                    #tokens: ["Hund", "->","Katze", ":", "Jagd"]
+                #},
+                #{    
+                    #tokens: ["Hund", "->","Katze", ":", "Beisst"]
+                #},
+                #{    
+                    #tokens: ["Katze", "->", "Maus", ":", "Beisst"]
+                #},
+                #{    
+                    #tokens: ["Maus", "->", "Fliege", ":", "Isst"]
+                #},
+                #{    
+                    #tokens: ["Fliege", "->", "Mensch", ":", "Nerft"]
+                #},
+                #{    
+                    #tokens: ["Mensch", "->", "Katze", ":", "Hat"]
+                #}]
+            #};
 
         @rendererManager.renderData(parseddata);
         console.log data

@@ -55,3 +55,8 @@ exports.testTokenizerIsRobust = function(test) {
   test.deepEqual(Tokenizer.tokenize("Mensch -> \n Hund : asd\nHund"), ["Mensch", "->", "Hund", ":", "asd", "\n", "Hund"]);
   test.done();
 }
+
+exports.testCanHandleLongProcessString = function(test) {
+  test.deepEqual(Tokenizer.tokenize("A -> B\nA->B:Blabla\nB->A\nB:Test->A:Testaaa"), ["A", "->", "B", "\n", "A", "->", "B", ":", "Blabla", "\n", "B", "->", "A", "\n", "B", ":", "Test", "->", "A", ":", "Testaaa"]);
+  test.done();
+}
