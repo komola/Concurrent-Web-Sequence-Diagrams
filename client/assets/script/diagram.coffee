@@ -1,56 +1,54 @@
 elementInformation = []
 dependencyList = []
 
-array_flip = (object) ->
-    obj = {}
+parseUserInput = (string) ->
+    lines = string.split("\n")
 
-    for a, b of object
-        obj[b] = a
-    
-    return obj
-
-parseUserInput = (lines, structureElements) ->
-    structureMap = array_flip(structureElements)
-
+    structureMap = {}
     taskMap = {}
+
     #// 1 => To the right,
     #// -1 => To the left
     direction = 1
     row = 0
     lastKey = -1
+    currentStructure = 0
+    structureElements = []
+
     for currentLine in lines
         [structure, task] = currentLine.split(":")
         
         task = task.trim()
 
-        console.log task
-
+        # Init new structure, if this is unknown so far
         if not structureMap[structure]?
-            throw "Unknown structure structure!"
+            structureMap[structure] = currentStructure++
+            structureElements.push(structure)
 
         key = structureMap[structure]
 
-        if key > lastKey && direction == -1 || key < lastKey && direction == 1
+        # Detect direction in our diagram
+        # We might have to go to the next row if it changes
+        if key > lastKey && direction == -1 
+          || key < lastKey && direction == 1
+          || key == lastKey 
             direction *= -1
             row++
         
+        # Moved this to the upper if condition.
+        # If we run into issues with directions, we might have to undo this.
+        #if key == lastKey
+            #direction *= -1
+            #row++
 
-        if key == lastKey
-            direction *= -1
-            row++
-
+        # Initialize empty object
         if not taskMap[row]?
-         console.log "Creating new entry", row
          taskMap[row] = {}
 
-        console.log key
-
         taskMap[row][key] = task
-
         lastKey = key
 
         dependencyList.push( [row+1, key] )
-    
 
     # Fill empty fields in our map
     for key, value of taskMap
@@ -58,11 +56,17 @@ parseUserInput = (lines, structureElements) ->
             if not taskMap[key][i]?
                 taskMap[key][i] = ""
 
+    # TODO Do we still need this?
+    #
     #for i in [0... taskMap.length]
     #    ksort(taskMap[i])
 
     window.console.log('task Map', taskMap)
-    return taskMap
+    
+    tasks: taskMap
+    structures: structureElements
+
+window.parseUserInput = parseUserInput
 
 ###
 elementMap = array_merge(array(structureElements), parseUserInput(flowchart, structureElements))

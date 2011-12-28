@@ -70,6 +70,11 @@ $(function() {
 sharejs.open('blag', 'text', function(error, doc) {
   var elem = document.getElementById('pad');
   doc.attach_textarea(elem);
+
+	doc.on("change", function() {
+		var elm = $("#pad").val();
+		console.log(elm);
+		})
 });
 
 
