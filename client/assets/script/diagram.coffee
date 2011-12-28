@@ -29,9 +29,7 @@ parseUserInput = (string) ->
 
         # Detect direction in our diagram
         # We might have to go to the next row if it changes
-        if key > lastKey && direction == -1 
-          || key < lastKey && direction == 1
-          || key == lastKey 
+        if (key > lastKey && direction == -1) || (key < lastKey && direction == 1) || (key == lastKey)
             direction *= -1
             row++
         
@@ -48,7 +46,7 @@ parseUserInput = (string) ->
         taskMap[row][key] = task
         lastKey = key
 
-        dependencyList.push( [row+1, key] )
+        dependencyList.push( {row: row, col: key} )
 
     # Fill empty fields in our map
     for key, value of taskMap
@@ -61,10 +59,9 @@ parseUserInput = (string) ->
     #for i in [0... taskMap.length]
     #    ksort(taskMap[i])
 
-    window.console.log('task Map', taskMap)
-    
     tasks: taskMap
     structures: structureElements
+    dependencies: dependencyList
 
 window.parseUserInput = parseUserInput
 
