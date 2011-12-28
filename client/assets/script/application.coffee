@@ -7,12 +7,10 @@ class Application
         @rendererManager = new RendererManager(canvas)
         @textArea = $("#"+textarea)
 
-        console.log @textArea
-
-
         sharejs.open "websequence", "text", (error, doc) =>
             doc.attach_textarea(document.getElementById(textarea))
             doc.on "change", @changeCallback
+            @changeCallback()
             true
         #call for first draw;
         @changeCallback();
@@ -53,10 +51,8 @@ class Application
             #};
 
         @rendererManager.renderData(parseddata);
-        console.log data
 
     changeCallback: =>
-        console.log "test"
         window.clearTimeout(@timer)
         @timer = window.setTimeout @redraw, limiter
 
