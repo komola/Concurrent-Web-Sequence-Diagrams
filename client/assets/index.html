@@ -1,1 +1,106 @@
-Hello!
+<!DOCTYPE html>
+<html>
+	<head>
+	<link rel="stylesheet" href="lib/bootstrap.min.css">
+	<style type="text/css">
+
+		body {
+	  	padding-top: 60px;
+		}
+
+		p {
+		  word-spacing: 1.5px;
+		  font-size: 16px;
+		  line-height: 1.625em;
+		  padding:0 0 0.8125em 0;
+		}
+
+		section {
+		  padding-top: 30px;
+		}
+
+		#pad {
+		  width: 90%;
+		}
+
+
+		.footer {
+		  background-color: #EEE;
+		  min-width: 940px;
+		  padding: 30px 0;
+		  text-shadow: 0 1px 0 white;
+		  border-top: 1px solid #E5E5E5;
+		  -webkit-box-shadow: inset 0 5px 15px rgba(0,0,0,.025);
+		  -moz-box-shadow: inset 0 5px 15px rgba(0,0,0,.025);
+		}
+
+	</style>
+	<title></title>
+</head>
+<body>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="#">ShareJS</a>
+          <ul class="nav">
+<!--            <li class="active"><a href="#">Intro</a></li>-->
+          </ul>
+          <ul class="nav secondary-nav">
+            <li><a href="demos.html">Demos</a></li>
+            <li><a href="https://github.com/josephg/ShareJS/wiki">Documentation</a></li>
+            <li><a href="https://github.com/josephg/ShareJS">Github</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<div class="container">
+
+<section id="intro">
+	<div class="page-header"><h1>Concurrent Web Sequence Diagrams</h1></div>
+
+	<p>Hey.</p>
+
+</section>
+<section id="body">
+	<p>body</p>
+
+	<p>How do you make that work, without the data going out of sync and without losing anything?</p>
+
+	<textarea id="pad"></textarea>
+
+
+
+</section>
+</div>
+<footer class="footer">
+	<div class="container">
+		<p class="pull-right">With love, <a href="http://josephg.com">Joseph Gentle</a>, 6 Nov 2011</p>
+	</div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/share/share.js"></script>
+<script src="/share/json.js"></script>
+<script src="/share/textarea.js"></script>
+
+
+
+<script>
+$(function() {
+  // *** Editor window
+
+sharejs.open('blag', 'text', function(error, doc) {
+  var elem = document.getElementById('pad');
+  doc.attach_textarea(elem);
+});
+
+
+});
+
+</script>
+	</body>
+</html>
+
