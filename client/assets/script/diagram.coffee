@@ -1,5 +1,4 @@
 elementInformation = []
-
 dependencyList = []
 
 array_flip = (object) ->
@@ -64,13 +63,6 @@ parseUserInput = (lines, structureElements) ->
 
     window.console.log('task Map', taskMap)
     return taskMap
-
-userLines = [ "User: Test", "Server: Foo"]
-
-sections = ["User", "Server"]
-
-window.console.log(parseUserInput)
-parseUserInput(userLines, sections)
 
 ###
 elementMap = array_merge(array(structureElements), parseUserInput(flowchart, structureElements))
