@@ -1,11 +1,13 @@
 elementInformation = []
-dependencyList = []
 
 parseUserInput = (string) ->
-    lines = string.split("\n")
 
+    dependencyList = []
+    structureElements = []
     structureMap = {}
     taskMap = {}
+
+    lines = string.split("\n")
 
     #// 1 => To the right,
     #// -1 => To the left
@@ -13,7 +15,6 @@ parseUserInput = (string) ->
     row = 0
     lastKey = -1
     currentStructure = 0
-    structureElements = []
 
     for currentLine in lines
         [structure, task] = currentLine.split(":")
