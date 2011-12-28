@@ -63,12 +63,15 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     
 
 roundRect = (ctx, x, y, width, height, radius, fill, stroke) ->
-  if (typeof stroke == "undefined" ) {
+  if (not stroke? ) 
     stroke = true;
-  }
-  if (typeof radius === "undefined") {
+  
+  if (not radius?) 
     radius = 5;
-  }
+  
+  oldFill = ctx.fillStyle;
+  ctx.fillStyle = "white";
+
   ctx.beginPath();
   ctx.moveTo(x + radius, y);
   ctx.lineTo(x + width - radius, y);
@@ -80,15 +83,14 @@ roundRect = (ctx, x, y, width, height, radius, fill, stroke) ->
   ctx.lineTo(x, y + radius);
   ctx.quadraticCurveTo(x, y, x + radius, y);
   ctx.closePath();
-  if (stroke) {
-    ctx.stroke();
-  }
-  if (fill) {
+  if stroke
+      ctx.stroke();
+  if (fill) 
     ctx.fill();
-  }        
-
-
-drawLabel = (text, x, y, rightBound, context) ->
+  ctx.fillStyle = oldFill;
+  
+      
+drawLabel = (text, x, y, rightBound, ctx) ->
     if text == ""
         debugger;
         return;
@@ -98,29 +100,34 @@ drawLabel = (text, x, y, rightBound, context) ->
 
     width = textWidth + spacing;
     height = textHeight + spacing / 2;
-
+    console.log('rect:', width, height);
     if(rightBound) 
-        ctx.strokeRect(
-            x - width + spacing / 2,
-            y - height / 2 + spacing / 2,
-            width - spacing ,
-            height - spacing ,
+        roundRect(ctx,
+            x - width   ,
+            y - height / 2 ,
+            width ,
+            height ,
+            5,
+            true,
+            true
         )
+        
+
         ctx.fillText(text, 
-            x - width + width/ 2 - textWidth / 2, 
-            y + height / 2 + textHeight / 2,
+            x - width + spacing / 2  , 
+            y + height / 2 - textHeight / 2,
             width - 2*spacing )
     else
-        ctx.strokeRect(
+        roundRect(ctx,
             x + spacing / 2,
-            y + spacing / 2,
-            boxwidth - spacing ,
-            boxheight - spacing ,
+            y - height / 2,
+            width   ,
+            height , 5, true, true
         )
     
         ctx.fillText(text, 
-            x + width/ 2 - textWidth / 2, 
-            y + height / 2 + textHeight / 2,
+            x + spacing , 
+            y + height / 2 - textHeight / 2,
             width - 2*spacing )
 
 
@@ -160,7 +167,9 @@ class ActionRenderer extends AbstractRenderer
             context);
         context.stroke();
 
-        drawLabel(row.tokens[4], fromActor.x, renderState.verticalPosition, false);
+        if (row.tokens[3] == ":")
+            rightBound = toActor.x < fromActor.x;
+            drawLabel(row.tokens[4], fromActor.x, renderState.verticalPosition, rightBound, context);
 
         renderState.verticalPosition += 50;
 
@@ -179,7 +188,7 @@ class RenderState
                 name: name,
                 activePath: [],
                 width: COLUMN_WIDTH,
-                x: @actorArray.length * COLUMN_WIDTH
+                x: @actorArray.length * COLUMN_WIDTH + COLUMN_WIDTH / 2
             };
             @actors[name] = newActor;
             @actorArray.push(newActor);
@@ -220,7 +229,7 @@ class RendererManager
         # draw the header boxes
         for actor in renderState.actorArray 
             # Draw the labels
-            drawBox(actor.name, actor.x, 0, @context);
+            drawBox(actor.name, actor.x - COLUMN_WIDTH / 2, 0, @context);
 
         # draw the vertical lines 
         @context.beginPath();
