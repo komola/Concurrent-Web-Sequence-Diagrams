@@ -7,7 +7,7 @@ parseUserInput = (string) ->
     structureMap = {}
     taskMap = {}
 
-    lines = string.split("\n")
+    lines = string.trim().split("\n")
 
     #// 1 => To the right,
     #// -1 => To the left

@@ -37,7 +37,10 @@
 
 	<div class="row">
 		<div class="span8">
-			<textarea id="pad"></textarea>
+			<textarea id="pad">
+Thomas: Says Hello
+Dennis: Hits him
+            </textarea>
 		</div>
 		<div class="span8">
 			<canvas id="canvas" width="600" height="600"></canvas>
@@ -59,30 +62,9 @@
 <script src="/share/json.js"></script>
 <script src="/share/textarea.js"></script>
 
-<script src="script/diagram.js"></script>
+<script src="script/parser.js"></script>
 <script src="script/renderer.js"></script>
 <script src="script/application.js"></script>
-
-
-
-<script>
-$(function() {
-  // *** Editor window
-
-sharejs.open('blag', 'text', function(error, doc) {
-  var elem = document.getElementById('pad');
-  doc.attach_textarea(elem);
-
-	doc.on("change", function() {
-		var elm = $("#pad").val();
-		console.log(elm);
-		})
-});
-
-
-});
-
-</script>
 	</body>
 </html>
 

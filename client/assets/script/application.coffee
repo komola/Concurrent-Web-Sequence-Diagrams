@@ -1,17 +1,52 @@
+$ = jQuery
 
 class Application
-    renderer = null;
-    
-    redraw: () ->
-        data = "Thomas: Says Hello \n Dennis: Hits him"
+    limiter = 30;
+
+    constructor: (textarea, canvas) ->
+        @rendererManager = new RendererManager(canvas)
+        @textArea = $("#"+textarea)
+
+        console.log @textArea
+
+        sharejs.open "websequence", "text", (error, doc) =>
+            doc.attach_textarea(document.getElementById(textarea))
+            doc.on "change", @changeCallback
+            true
+
+        return true
+
+    redraw: =>
+        data = @textArea.val();
+        #data = "Thomas: Says Hello \n Dennis: Hits him"
         parseddata = parseUserInput(data);
-        renderer.draw(parseddata);
+        parseddata = {
+            actors: ["Mensch", "Hund", "Katze", "Maus", "Fliege"],
+            actions: [{    
+                    tokens: ["Mensch", "->", "Hund", ":", "Hat"]
+                },
+                {    
+                    tokens: ["Hund", "->","Katze", ":", "Beisst"]
+                },
+                {    
+                    tokens: ["Katze", "->", "Maus", ":", "Beisst"]
+                },
+                {    
+                    tokens: ["Maus", "->", "Fliege", ":", "Isst"]
+                },
+                {    
+                    tokens: ["Fliege", "->", "Mensch", ":", "Nerft"]
+                }]
+            };
 
-    constructor: () ->
-        renderer = new Renderer('canvas')
+        @rendererManager.renderData(parseddata);
+        console.log data
 
+    changeCallback: =>
+        console.log "test"
+        window.clearTimeout(@timer)
+        @timer = window.setTimeout @redraw, limiter
 
-$(document).ready(() ->
-    app = new Application() ;
-    app.redraw();
+$(() ->
+  new Application "pad", "canvas"
 )
