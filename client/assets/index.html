@@ -67,6 +67,10 @@
 
 	<p>How do you make that work, without the data going out of sync and without losing anything?</p>
 
+	<textarea id="pad"></textarea>
+
+
+
 </section>
 </div>
 <footer class="footer">
@@ -80,9 +84,19 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/share/share.js"></script>
 <script src="/share/json.js"></script>
+<script src="/share/textarea.js"></script>
+
+
+
 <script>
 $(function() {
   // *** Editor window
+
+sharejs.open('blag', 'text', function(error, doc) {
+  var elem = document.getElementById('pad');
+  doc.attach_textarea(elem);
+});
+
 
 });
 
