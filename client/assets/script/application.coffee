@@ -9,12 +9,15 @@ class Application
 
         currentDocument = location.search
 
+        $(".secondary-nav a.target").attr("href", "/?"+@generateID())
+
         if not currentDocument
           $(".btn.large.center.success").attr("href", "/?" + @generateID())
           $("#editing").hide()
         else
           $("#body").hide()
           $(".alert-message a.target").attr("href", "/"+currentDocument)
+          $("#share-modal .address").val(location.href)
           $(".alert-message a.close").click (e) ->
             $(e.target.offsetParent).slideUp()
             e.preventDefault()

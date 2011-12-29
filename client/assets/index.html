@@ -14,8 +14,8 @@
 <!--            <li class="active"><a href="#">Intro</a></li>-->
           </ul>
           <ul class="nav secondary-nav">
-            <!--<li><a href="demos.html">Demos</a></li>-->
-            <!--<li><a href="https://github.com/josephg/ShareJS/wiki">Documentation</a></li>-->
+						<li><a href="#" class="share" data-controls-modal="share-modal" data-backdrop="true" data-keyboard="true">Share this diagram</a></li>
+						<li><a href="#" class="target btn small primary">New diagram</a></li>
             <!--<li><a href="https://github.com/josephg/ShareJS">Github</a></li>-->
           </ul>
         </div>
@@ -37,6 +37,21 @@
 			<form>
 				<a href="" class="btn large center success">Create a new diagram</a>
 			</form>
+		</div>
+	</div>
+
+	<div id="share-modal" class="modal hide fade" style="display: none; ">
+		<div class="modal-header">
+			<a href="#" class="close">×</a>
+			<h3>Share this diagram</h3>
+		</div>
+		<div class="modal-body">
+			<p>Just give them this address:</p>
+
+			<input type="text" value="" class="address xlarge" style="margin: 0 auto">
+		</div>
+		<div class="modal-footer">
+			<!--<a href="#" class="btn primary close">OK</a>-->
 		</div>
 	</div>
 
@@ -78,16 +93,12 @@ User -> Browser: Click
         <br>
         during the <a href="http://komola.de">komola</a> Hackathon</div>
 </footer>
-
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
--->
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.1.3/less-1.1.3.min.js"></script>
 <script src="lib/jquery.min.js"></script>
 <script src="lib/jquery-ui.min.js"></script>
+<script src="lib/bootstrap-modal.js"></script>
 
 <script type="text/javascript" src="http://static.dennisschaaf.com/hand-canvas-pre-release.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.1.3/less-1.1.3.min.js"></script>
     
 
 <script src="/socket.io/socket.io.js"></script>
