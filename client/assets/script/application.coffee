@@ -7,7 +7,13 @@ class Application
         @rendererManager = new RendererManager(canvas)
         @textArea = $("#"+textarea)
 
-        sharejs.open "websequence", "text", (error, doc) =>
+        currentDocument = location.search
+        if currentDocument[0] == "?"
+          currentDocument = currentDocument.substr(1)
+        
+        console.log currentDocument
+
+        sharejs.open currentDocument, "text", (error, doc) =>
             doc.attach_textarea(document.getElementById(textarea))
             doc.on "change", @changeCallback
             @changeCallback()
