@@ -30,24 +30,27 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     headlen = 10; #length of head in pixels
     angle = Math.atan2(toy-fromy,tox-fromx);
     
+    #move to starting position
+    context.moveTo(fromx, fromy);
+
+    #calculate the control points for the bezier of the main arrow
+    mx = tox - fromx / 2
+    cx1 = mx - 20;
+    cx2 = mx + 20;
+    cy1 = toy - 8;
+    cy2 = toy + 5;
+
+
     if angle < Math.PI / 2
         angle += Math.PI / 180 * 45;
-        # main line
-        context.moveTo(fromx, fromy);
-#        context.lineTo(tox - arrowNudge * 2, toy);
-        mx = tox - fromx / 2
-        cx1 = mx - 20;
-        cx2 = mx + 20;
-        cy1 = toy - 8;
-        cy2 = toy + 5;
-
+        # main line, replaced with bezier curve
+        #context.lineTo(tox - arrowNudge * 2, toy);
         context.bezierCurveTo(
             cx1, cy1,
             cx2, cy2,
-
             tox - arrowNudge * 2, toy);
-
-
+        
+        #the nudge part of the line
         context.bezierCurveTo(
             tox - arrowNudge * 0.5, toy,
             tox - arrowNudge * 1, toy,
@@ -61,13 +64,18 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     else 
         angle -= Math.PI / 180 * 45;
         # main line
-        context.moveTo(fromx, fromy);
         #context.lineTo(tox, toy);
         context.bezierCurveTo(
-            tox + arrowNudge, toy,
-            tox + arrowNudge, toy,
-            tox, toy + arrowNudge
-        )
+            cx1, cy1,
+            cx2, cy2,
+            tox + arrowNudge * 2, toy);
+
+        #the nudge part of the line
+        #context.bezierCurveTo(
+        #    tox + arrowNudge * 0.5, toy,
+        #    tox + arrowNudge * 1, toy,
+        #    tox, toy + arrowNudge
+        #)
 
         # arrow head
         context.lineTo(tox-headlen*Math.cos(angle-Math.PI/6),toy+ arrowNudge-headlen*Math.sin(angle-Math.PI/6));
