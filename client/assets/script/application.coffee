@@ -29,7 +29,16 @@ class Application
             doc.on "change", @changeCallback
 
             if @textArea.val() == ""
-              @textArea.val("Thomas -> Dennis: Hey there!\nDennis->Sebastian: Nice seeing you!\nSebastian->Thomas: Wow, got old!")
+              @textArea.val("This is an easy way to create nice sequence diagrams\n
+in a very collaborative way with your friends and colleagues\n
+.\n\n
+
+User -> Browser: Clicks on action\n
+Browser -> Server: Send request\n
+Server -> Browser: Send response\n
+Browser -> User: Render it\n
+User -> Browser: Laugh at result\n
+User -> Browser: Click")
 
             @changeCallback()
             true
