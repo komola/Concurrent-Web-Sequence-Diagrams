@@ -24,6 +24,7 @@ exports.testWhitespaceMattersWithHyphens = function(test) {
 
 exports.testHyphensEscapeDelimiter = function(test) {
   test.deepEqual(Tokenizer.tokenize("'Mensch: '-> Hund:   Hat"), ["Mensch:", "->", "Hund", ":", "Hat"]);
+  test.deepEqual(Tokenizer.tokenize("'Mensch -> '-> Hund: Hat"), ["Mensch ->", "->", "Hund", ":", "Hat"]);
   test.done();
 }
 
@@ -46,6 +47,12 @@ exports.testProcessMultiLine = function(test) {
 exports.testProcessStringOverSeveralLines = function(test) {
   test.deepEqual(Tokenizer.tokenize("Mensch: Bla -> \r\n"+
         " Hund:Bla"), ["Mensch", ":", "Bla", "->", "Hund", ":", "Bla"]);
+  test.done();
+}
+
+exports.testOneSingleQuoteRemainsInBuffer = function(test) {
+  test.deepEqual(Tokenizer.tokenize("A' -> B: C"), ["A'", "->", "B", ":", "C"]);
+  test.deepEqual(Tokenizer.tokenize("A' -> B': C"), ["A'", "->", "B'", ":", "C"]);
   test.done();
 }
 
