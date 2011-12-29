@@ -292,17 +292,20 @@ class RendererManager
             drawBox(actor.name, actor.x - COLUMN_WIDTH / 2, 0, @context);
 
         # draw the vertical lines 
-        @context.beginPath();
+        #@context.beginPath();
         console.log('actorArray', renderState.actorArray )
-        for actor in renderState.actorArray 
+        for actor, a in renderState.actorArray 
+            @context.beginPath();
             # Draw the vertical Line Paths
             drawing = false;
             lastElement = null;
             firstElement = null;
+            console.log actor.activePath.join(",") 
             for element, i in actor.activePath
-                if element == null
-
-                    my = lastElement - firstElement / 2
+                if element == null and firstElement isnt lastElement
+                    console.log actor.name, firstElement, lastElement
+                    my = (lastElement + firstElement) / 2;
+                    cy1 = cy2 = my;
                     cy1 = my - 20;
                     cy2 = my + 20;
                     cx1 = actor.x - 8;
@@ -311,21 +314,20 @@ class RendererManager
                     @context.bezierCurveTo(
                         cx1, cy1,
                         cx2, cy2,
-
-                        actor.x  , lastElement);
-
+                        actor.x, lastElement);
 
                     #@context.lineTo(actor.x, lastElement);
                     lastElement = null;
                     drawing = false;
                 else 
                     if lastElement == null
-                        firstElement = element;
-                        an = if(i>0) then arrowNudge else 0
-                        @context.moveTo(
-                            actor.x, element 
-                                + an );
-                    lastElement = element;
+                        firstElement = element
+                        an = if(a>0 or i > 0) then arrowNudge else 0
+                        console.log "Current i", i, actor.name, element + an
+                        @context.moveTo actor.x, element + an 
+                    lastElement = element
+
+                @context.stroke()
                     
         @context.stroke();
 

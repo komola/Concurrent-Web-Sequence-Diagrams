@@ -1,25 +1,3 @@
-###
-{
-actors: ["Mensch", "Hund", "Katze", "Maus", "Fliege"],
-actions: [
-    {    
-        tokens: [0, "->", 1, ":", "Hat"]
-    },
-    {    
-        tokens: [1, "->",2, ":", "Beisst"]
-    },
-    {    
-        tokens: [2, "->", 3, ":", "Beisst"]
-    },
-    {    
-        tokens: [3, "->", 4, ":", "Isst"]
-    },
-    {    
-        tokens: [4, "->", 1, ":", "Nerft"]
-    }]
-}
-
-###
 class Tokenizer
 
   constructor: ->
@@ -36,7 +14,7 @@ class Tokenizer
 
 
       # Begin quoation mode
-      if not quotationMode and (a is "'" or a is '"')
+      if not quotationMode and (a is "'" or a is '"') and buffer is ""
         quotationMode = a
 
       # Add content of quotation
@@ -75,4 +53,4 @@ class Tokenizer
     tokens
 
 module?.exports = new Tokenizer
-window.Tokenizer = new Tokenizer
+window?.Tokenizer = new Tokenizer
