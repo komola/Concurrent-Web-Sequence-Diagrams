@@ -7,6 +7,10 @@ spacing = 12;
 
 arrowNudge = 20;
 
+
+drawVerticalLine = (fromx, fromy) ->
+
+
 drawBox = (text, x, y, ctx) ->
     if text == ""
         return;
@@ -30,24 +34,27 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     headlen = 10; #length of head in pixels
     angle = Math.atan2(toy-fromy,tox-fromx);
     
+    #move to starting position
+    context.moveTo(fromx, fromy);
+
+    #calculate the control points for the bezier of the main arrow
+    mx = (tox + fromx) / 2
+    cx1 = mx - 20;
+    cx2 = mx + 20;
+    cy1 = toy - 8;
+    cy2 = toy + 5;
+
+
     if angle < Math.PI / 2
         angle += Math.PI / 180 * 45;
-        # main line
-        context.moveTo(fromx, fromy);
-#        context.lineTo(tox - arrowNudge * 2, toy);
-        mx = tox - fromx / 2
-        cx1 = mx - 20;
-        cx2 = mx + 20;
-        cy1 = toy - 8;
-        cy2 = toy + 5;
-
+        # main line, replaced with bezier curve
+        #context.lineTo(tox - arrowNudge * 2, toy);
         context.bezierCurveTo(
             cx1, cy1,
             cx2, cy2,
-
             tox - arrowNudge * 2, toy);
-
-
+        
+        #the nudge part of the line
         context.bezierCurveTo(
             tox - arrowNudge * 0.5, toy,
             tox - arrowNudge * 1, toy,
@@ -61,11 +68,16 @@ drawArrow = (fromx, fromy, tox, toy, context) ->
     else 
         angle -= Math.PI / 180 * 45;
         # main line
-        context.moveTo(fromx, fromy);
         #context.lineTo(tox, toy);
         context.bezierCurveTo(
-            tox + arrowNudge, toy,
-            tox + arrowNudge, toy,
+            cx1, cy1,
+            cx2, cy2,
+            tox + arrowNudge * 2, toy);
+
+        #the nudge part of the line
+        context.bezierCurveTo(
+            tox + arrowNudge * 0.5, toy,
+            tox + arrowNudge * 1, toy,
             tox, toy + arrowNudge
         )
 
@@ -161,8 +173,14 @@ class LabelRenderer extends AbstractRenderer
             return true;
         return false;
     render: (row, renderState, context) ->
+        fontSize = 12;
+        while(row.tokens[0] == ":")
+            fontSize += 2;
+            row.tokens.shift()
+
+
         context.save();
-        context.font = "16px Arial";
+        context.font = '' + fontSize + "px Arial";
         context.fillText(row.tokens[0], spacing, renderState.verticalPosition + spacing);
 
         renderState.verticalPosition += 30;
@@ -268,6 +286,16 @@ class RendererManager
         @context.clearRect(0,0, @canvas.width, @canvas.height);
 
         renderState = new RenderState();
+
+        #render a simple grid
+        @context.save()
+        for act, i in data.actors 
+            @context.moveTo(COLUMN_WIDTH * (0.5 + i), 50);
+            @context.lineTo(COLUMN_WIDTH * (0.5 + i), @canvas.height);
+        @context.lineWidth = 10;
+        @context.strokeStyle = "rgba(0,0,0,0.05)";
+        @context.stroke();
+        @context.restore();
 
         renderState.verticalPosition = boxheight + 2 * spacing ; # leave space for header
 
