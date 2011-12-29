@@ -10,9 +10,14 @@ class Application
         currentDocument = location.search
 
         if not currentDocument
+          $(".btn.large.center.success").attr("href", "/?" + @generateID())
           $("#editing").hide()
         else
           $("#body").hide()
+          $(".alert-message a.target").attr("href", "/"+currentDocument)
+          $(".alert-message a.close").click (e) ->
+            $(e.target.offsetParent).slideUp()
+            e.preventDefault()
 
         if currentDocument[0] == "?"
           currentDocument = currentDocument.substr(1)
@@ -32,6 +37,15 @@ class Application
         @changeCallback();
 
         return true
+
+    generateID: ->
+      text = ""
+      possible = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+      for i in [0...8]
+        text += possible.charAt(Math.floor(Math.random() * possible.length))
+
+      text
 
     redraw: =>
         data = @textArea.val();
