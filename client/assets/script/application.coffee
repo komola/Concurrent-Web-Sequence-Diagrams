@@ -8,6 +8,12 @@ class Application
         @textArea = $("#"+textarea)
 
         currentDocument = location.search
+
+        if not currentDocument
+          $("#editing").hide()
+        else
+          $("#body").hide()
+
         if currentDocument[0] == "?"
           currentDocument = currentDocument.substr(1)
         
@@ -16,6 +22,10 @@ class Application
         sharejs.open currentDocument, "text", (error, doc) =>
             doc.attach_textarea(document.getElementById(textarea))
             doc.on "change", @changeCallback
+
+            if @textArea.val() == ""
+              @textArea.val("Thomas -> Dennis: Hey there!\nDennis->Sebastian: Nice seeing you!\nSebastian->Thomas: Wow, got old!")
+
             @changeCallback()
             true
         #call for first draw;
