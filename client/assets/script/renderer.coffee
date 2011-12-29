@@ -112,7 +112,6 @@ roundRect = (ctx, x, y, width, height, radius, fill, stroke) ->
       
 drawLabel = (text, x, y, rightBound, ctx) ->
     if text == ""
-        debugger;
         return;
 
     textWidth = ctx.measureText(text).width;
@@ -129,10 +128,8 @@ drawLabel = (text, x, y, rightBound, ctx) ->
             height ,
             1,
             true,
-            true
-        )
+            true)
         
-
         ctx.fillText(text, 
             x - width - spacing / 2  , 
             y + height / 2 - textHeight / 2 + 1,
@@ -157,7 +154,20 @@ class AbstractRenderer
         return false;
     render: (row, renderState, context) -> 
         console.log("Todo: Implement");
-        
+
+class LabelRenderer extends AbstractRenderer
+    acceptsRow: (row) ->
+        if(row.tokens.length == 1 or (row.tokens.length == 2 and row.tokens[0] == ":"))
+            return true;
+        return false;
+    render: (row, renderState, context) ->
+        context.save();
+        context.font = "16px Arial";
+        context.fillText(row.tokens[0], spacing, renderState.verticalPosition + spacing);
+
+        renderState.verticalPosition += 30;
+        context.restore();    
+
 class ActionRenderer extends AbstractRenderer
     lastFromActor = null;
 
@@ -179,9 +189,9 @@ class ActionRenderer extends AbstractRenderer
         toActor = renderState.getActor(row.tokens[2]);
         toActor.activePath.push(renderState.verticalPosition);
 
-        context.shadowColor = "rgba(0,0,0, 0.4)";
-        
+        context.save();
         context.beginPath();
+        context.shadowColor = "rgba(0,0,0, 0.4)";
         drawArrow(fromActor.x,
             renderState.verticalPosition,
             toActor.x,
@@ -189,8 +199,7 @@ class ActionRenderer extends AbstractRenderer
             context);
 
         context.stroke();
-        context.shadowColor = "rgba(0,0,0, 0)";
-        
+        context.restore();
 
         if (row.tokens[3] == ":")
             rightBound = toActor.x < fromActor.x;
@@ -222,7 +231,7 @@ class RenderState
 
 class RendererManager
     constructor: (elementId) ->
-        @renderers = [new ActionRenderer()]
+        @renderers = [new ActionRenderer(), new LabelRenderer()]
         @canvas = document.getElementById(elementId);
         if @canvas.getContext
             width = @canvas.width;
