@@ -284,7 +284,6 @@ class RendererManager
             firstElement = null;
             for element, i in actor.activePath
                 if element == null
-
                     my = lastElement - firstElement / 2
                     cy1 = my - 20;
                     cy2 = my + 20;
@@ -306,9 +305,10 @@ class RendererManager
                         firstElement = element;
                         an = if(i>0) then arrowNudge else 0
                         @context.moveTo(
-                            actor.x, element 
-                                + an );
+                            actor.x, element + an );
                     lastElement = element;
+
+                @context.stroke()
                     
         @context.stroke();
 
