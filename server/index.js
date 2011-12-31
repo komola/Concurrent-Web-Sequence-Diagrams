@@ -25,6 +25,10 @@ var server = connect(
 				//docName = req.params.docName;
 				//renderer(docName, server.model, res, next);
 			//});
+			app.get('/new', function(req, res, next) {
+				res.writeHead(302, {location: '/?' + connect.utils.uid(8)});
+				res.end();
+			})
 
 			app.get('/?', function(req, res, next) {
 				res.writeHead(302, {location: '/index.html'});
