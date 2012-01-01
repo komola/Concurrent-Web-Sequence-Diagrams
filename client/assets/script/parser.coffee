@@ -30,11 +30,12 @@ class Parser
       actionString = action.join("")
 
       parts = actionString.split("->")
-
+      debugger;
       for a in parts
         [b] = a.split(":")
 
-        actors[b] = true
+        if b != ""
+          actors[b] = true
 
     (a for a of actors)
 
