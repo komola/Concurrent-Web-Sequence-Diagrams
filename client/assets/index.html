@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	<link rel="stylesheet" href="lib/bootstrap.min.css">
-	<link rel="stylesheet/less" type="text/css" href="style/style.less">
-	<title>Sequence</title>
-    <style>
-        #welcome, #editing {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="topbar">
-      <div class="fill">
-        <div class="container">
-          <a class="brand" href="/">Sequence</a>
-          <ul class="nav">
+<link rel="stylesheet" href="lib/bootstrap.min.css">
+<link rel="stylesheet/less" type="text/css" href="style/style.less">
+
+<title>Sequence</title>
+
+<style>
+    #welcome, #editing {
+        display: none;
+    }
+</style>
+
+<div class="topbar">
+  <div class="fill">
+    <div class="container">
+      <a class="brand" href="/">Sequence</a>
+      <ul class="nav">
 <!--            <li class="active"><a href="#">Intro</a></li>-->
-          </ul>
-          <ul class="nav secondary-nav">
-				<li>
-                    <a href="#" 
-                        class="share" 
-                        data-controls-modal="share-modal" 
-                        data-backdrop="true" 
-                        data-keyboard="true">Share this diagram</a></li>
-				
-                <li>
-                    <a href="/new" class="target btn small primary">New diagram</a></li>
-            <!--<li><a href="https://github.com/josephg/ShareJS">Github</a></li>-->
-          </ul>
-        </div>
-      </div>
+      </ul>
+      <ul class="nav secondary-nav">
+			<li>
+                <a href="#" 
+                    class="share" 
+                    data-controls-modal="share-modal" 
+                    data-backdrop="true" 
+                    data-keyboard="true">Share this diagram</a></li>
+			
+            <li>
+                <a href="/new" class="target btn small primary">New diagram</a></li>
+        <!--<li><a href="https://github.com/josephg/ShareJS">Github</a></li>-->
+      </ul>
     </div>
+  </div>
+</div>
 
 <div class="container">
     <section id="welcome">
@@ -84,9 +84,7 @@
     	</div>
     	<div class="row">
     		<div class="span6">
-    			<textarea id="pad">
-                    Loading ...
-                </textarea>
+    			<textarea id="pad">Loading ...</textarea>
     		</div>
     		<div class="span10">
     			<canvas id="canvas" width="580" height="600"></canvas>
@@ -95,6 +93,7 @@
 
     </section>
 </div>
+
 <footer class="footer">
 	<div class="container">
         <div class="pull-right" style="text-align: right;">
@@ -108,6 +107,7 @@
         </div>
     </div>
 </footer>
+
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.1.3/less-1.1.3.min.js"></script>
 <script src="lib/jquery.min.js"></script>
 <script src="lib/jquery-ui.min.js"></script>
@@ -132,6 +132,5 @@
 <script src="script/drawingHelpers.js"></script>
 <script src="script/renderer.js"></script>
 <script src="script/application.js"></script>
-	</body>
 </html>
 
